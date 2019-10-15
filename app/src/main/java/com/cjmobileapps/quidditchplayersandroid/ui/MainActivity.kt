@@ -1,12 +1,13 @@
 package com.cjmobileapps.quidditchplayersandroid.ui
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.cjmobileapps.quidditchplayersandroid.QuidditchPlayersApplication
 import com.cjmobileapps.quidditchplayersandroid.R
 import com.cjmobileapps.quidditchplayersandroid.ui.dagger.DaggerMainComponent
 import com.cjmobileapps.quidditchplayersandroid.ui.dagger.MainModule
+import com.cjmobileapps.quidditchplayersandroid.ui.viewmodel.MainViewModel
+import com.cjmobileapps.quidditchplayersandroid.ui.viewmodel.rx.Event
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
@@ -26,7 +27,8 @@ class MainActivity : AppCompatActivity() {
                 .build()
                 .inject(this)
 
-        Log.d("HERE_ ", mainViewModel.getBlah())
+        mainViewModel.initRx()
+        mainViewModel.processEvent(Event.GetPlayersAndPositionsEvent)
         /*model.getUsers().observe(this, Observer<List<User>>{ users ->
             // update UI
         }) */

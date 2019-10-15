@@ -11,6 +11,7 @@ import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
+import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
 import java.io.IOException
 import java.util.concurrent.TimeUnit
@@ -78,6 +79,7 @@ class NetworkModule {
     fun retrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
                 .baseUrl("https://cjmobileapps.com/")
+                .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(okHttpClient)
                 .build()
@@ -85,7 +87,7 @@ class NetworkModule {
 
     @QuidditchPlayersApplicationScope
     @Provides
-    fun quidditchPlayersApi(retrofit: Retrofit) : QuidditchPlayersApi {
+    fun quidditchPlayersApi(retrofit: Retrofit): QuidditchPlayersApi {
         return retrofit.create(QuidditchPlayersApi::class.java)
     }
 
