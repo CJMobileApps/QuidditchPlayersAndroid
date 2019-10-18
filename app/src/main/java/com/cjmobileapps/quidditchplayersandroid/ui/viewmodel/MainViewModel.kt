@@ -1,8 +1,11 @@
 package com.cjmobileapps.quidditchplayersandroid.ui.viewmodel
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.cjmobileapps.quidditchplayersandroid.network.QuidditchPlayersService
+import com.cjmobileapps.quidditchplayersandroid.network.models.Player
 import com.cjmobileapps.quidditchplayersandroid.ui.viewmodel.rx.Event
 import com.cjmobileapps.quidditchplayersandroid.ui.viewmodel.rx.MainUiStateModel
 import com.cjmobileapps.quidditchplayersandroid.ui.viewmodel.rx.Result
@@ -20,6 +23,8 @@ class MainViewModel(private val quidditchPlayersService: QuidditchPlayersService
     private lateinit var compositeDisposable: CompositeDisposable
     private val eventsSubject: PublishSubject<Event> = PublishSubject.create()
 
+    private val playersMutableLiveData = MutableLiveData<List<Player>>()
+    val players: LiveData<List<Player>> = playersMutableLiveData
 
     fun initRx() {
         compositeDisposable = CompositeDisposable()
@@ -148,12 +153,11 @@ class MainViewModel(private val quidditchPlayersService: QuidditchPlayersService
     private fun subscribeStateModelRender(mainUiStateModel: MainUiStateModel) {
 
         if (mainUiStateModel.inProgress) {
-            Log.d("HERE_", "mainUiStateInProgress")
+
         } else {
-            Log.d("HERE_", "mainUiState not InProgress")
 
             if (mainUiStateModel.success) {
-                Log.d("HERE_", "players: " + mainUiStateModel.playerList.toString())
+                playersMutableLiveData.value = mainUiStateModel.playerList
             } else {
                 Log.d("HERE_", "error message: " + mainUiStateModel.errorMessage)
                 Log.d("HERE_", "error status: " + mainUiStateModel.statusCode)

@@ -8,4 +8,7 @@ data class Player(
    var positionName: String?,
    val imageUrl: String,
    val yearsPlayed: List<Int>
-)
+) {
+    val fullName: String
+        get() = "$firstName $lastName"
+}

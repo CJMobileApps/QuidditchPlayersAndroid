@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Quidditch Players</string>
+    <string name="house">House</string>
+    <string name="gryffindor">Gryffindor</string>
+    <string name="favorite_subject">Favorite Subject</string>
+    <string name="years_played">Years Played</string>
+    <string name="no_status">No Status</string>
+    <string name="status">Status</string>
 </resources>
