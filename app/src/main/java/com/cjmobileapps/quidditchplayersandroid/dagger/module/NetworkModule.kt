@@ -5,6 +5,7 @@ import com.cjmobileapps.quidditchplayersandroid.network.NetworkConstants
 import com.cjmobileapps.quidditchplayersandroid.dagger.QuidditchPlayersApplicationScope
 import com.cjmobileapps.quidditchplayersandroid.network.QuidditchPlayersApi
 import com.cjmobileapps.quidditchplayersandroid.network.QuidditchPlayersService
+import com.cjmobileapps.quidditchplayersandroid.network.WebSocketRepository
 import dagger.Module
 import dagger.Provides
 import okhttp3.*
@@ -93,7 +94,13 @@ class NetworkModule {
 
     @QuidditchPlayersApplicationScope
     @Provides
-    fun quidditchPlayersService(quidditchPlayersApi: QuidditchPlayersApi): QuidditchPlayersService {
-        return QuidditchPlayersService(quidditchPlayersApi)
+    fun quidditchPlayersService(quidditchPlayersApi: QuidditchPlayersApi, webSocketRepository: WebSocketRepository): QuidditchPlayersService {
+        return QuidditchPlayersService(quidditchPlayersApi, webSocketRepository)
+    }
+
+    @QuidditchPlayersApplicationScope
+    @Provides
+    fun webSocketRepository(okHttpClient: OkHttpClient): WebSocketRepository {
+        return WebSocketRepository(okHttpClient,"wss://cjmobileapps.com/api/v1/quidditch/status")
     }
 }

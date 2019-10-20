@@ -6,11 +6,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.cjmobileapps.quidditchplayersandroid.network.QuidditchPlayersService
 import com.cjmobileapps.quidditchplayersandroid.network.models.Player
+import com.cjmobileapps.quidditchplayersandroid.network.models.Status
 import com.cjmobileapps.quidditchplayersandroid.ui.viewmodel.rx.Event
 import com.cjmobileapps.quidditchplayersandroid.ui.viewmodel.rx.MainUiStateModel
 import com.cjmobileapps.quidditchplayersandroid.ui.viewmodel.rx.Result
-import com.cjmobileapps.quidditchplayersandroid.ui.viewmodel.rx.Result.GetPlayersResult
-import com.cjmobileapps.quidditchplayersandroid.ui.viewmodel.rx.Result.GetPositionsResult
+import com.cjmobileapps.quidditchplayersandroid.ui.viewmodel.rx.Result.*
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -22,9 +22,13 @@ import io.reactivex.subjects.PublishSubject
 class MainViewModel(private val quidditchPlayersService: QuidditchPlayersService) : ViewModel() {
     private lateinit var compositeDisposable: CompositeDisposable
     private val eventsSubject: PublishSubject<Event> = PublishSubject.create()
-
     private val playersMutableLiveData = MutableLiveData<List<Player>>()
+    private val statusMutableLiveData = MutableLiveData<Status>()
     val players: LiveData<List<Player>> = playersMutableLiveData
+    val status: LiveData<Status> = statusMutableLiveData
+
+    //Key = Id & Value = index
+    val playersIndexMap = hashMapOf<Int, Int>()
 
     fun initRx() {
         compositeDisposable = CompositeDisposable()
@@ -37,6 +41,7 @@ class MainViewModel(private val quidditchPlayersService: QuidditchPlayersService
     }
 
     override fun onCleared() {
+        processEvent(Event.EndStatusesEvent)
         compositeDisposable.clear()
     }
 
@@ -47,14 +52,16 @@ class MainViewModel(private val quidditchPlayersService: QuidditchPlayersService
     private fun compose(): Observable<MainUiStateModel> {
         return eventsSubject
                 .publish { event ->
-                            event.ofType(Event.GetPlayersAndPositionsEvent::class.java).publish { getPlayersAndPositionsEvent ->
-                                val getPlayers: Observable<GetPlayersResult> = getPlayersAndPositionsEvent.compose(getPlayers)
-                                val getPositions: Observable<GetPositionsResult> = getPlayersAndPositionsEvent.compose(getPositions)
-                                getPlayersAndPositions(getPlayers, getPositions)
-                            }
+
+                    event.ofType(Event.GetPlayersAndPositionsEvent::class.java).publish { getPlayersAndPositionsEvent ->
+                        val getPlayers: Observable<GetPlayersResult> = getPlayersAndPositionsEvent.compose(getPlayers)
+                        val getPositions: Observable<GetPositionsResult> = getPlayersAndPositionsEvent.compose(getPositions)
+                        getPlayersAndPositions(getPlayers, getPositions)
+                    }.mergeWith(event.ofType(Event.GetStatusesEvent::class.java).compose(getStatuses))
+                            .mergeWith(event.ofType(Event.EndStatusesEvent::class.java).compose(endStatuses))
 
                 }
-                .scan(MainUiStateModel.idle(), resultsToStateUi)
+                .scan(MainUiStateModel.IdleState, resultsToStateUi)
     }
 
     private val resultsToStateUi = BiFunction { _: MainUiStateModel, result: Result ->
@@ -63,38 +70,49 @@ class MainViewModel(private val quidditchPlayersService: QuidditchPlayersService
             is GetPlayersResult ->
                 when (result) {
                     is GetPlayersResult.Success -> {
-                        MainUiStateModel.inProgress()
+                        MainUiStateModel.GetPlayersMainUiStateModel.inProgress()
                     }
                     is GetPlayersResult.InProgress -> {
-                        MainUiStateModel.inProgress()
+                        MainUiStateModel.GetPlayersMainUiStateModel.inProgress()
                     }
                     is GetPlayersResult.Failure -> {
-                        MainUiStateModel.failure(result.message, result.statusCode)
+                        MainUiStateModel.GetPlayersMainUiStateModel.failure(result.message, result.statusCode)
                     }
                 }
             is GetPositionsResult -> {
                 when (result) {
                     is GetPositionsResult.Success -> {
-                        MainUiStateModel.inProgress()
+                        MainUiStateModel.GetPlayersMainUiStateModel.inProgress()
                     }
                     is GetPositionsResult.InProgress -> {
-                        MainUiStateModel.inProgress()
+                        MainUiStateModel.GetPlayersMainUiStateModel.inProgress()
                     }
                     is GetPositionsResult.Failure -> {
-                        MainUiStateModel.failure(result.message, result.statusCode)
+                        MainUiStateModel.GetPlayersMainUiStateModel.failure(result.message, result.statusCode)
                     }
                 }
             }
-            is Result.GetPlayersAndPositionsResult -> {
+            is GetPlayersAndPositionsResult -> {
                 when (result) {
-                    is Result.GetPlayersAndPositionsResult.Success ->
-                        MainUiStateModel.success(result.players)
-                    is Result.GetPlayersAndPositionsResult.Failure ->
-                        MainUiStateModel.failure(result.message, result.statusCode)
-                    is Result.GetPlayersAndPositionsResult.InProgress ->
-                        MainUiStateModel.inProgress()
+                    is GetPlayersAndPositionsResult.Success ->
+                        MainUiStateModel.GetPlayersMainUiStateModel.success(result.players)
+                    is GetPlayersAndPositionsResult.Failure ->
+                        MainUiStateModel.GetPlayersMainUiStateModel.failure(result.message, result.statusCode)
+                    is GetPlayersAndPositionsResult.InProgress ->
+                        MainUiStateModel.GetPlayersMainUiStateModel.inProgress()
                 }
             }
+            is GetStatusesResult -> {
+                when (result) {
+                    is GetStatusesResult.Success ->
+                        MainUiStateModel.GetStatusesMainUiStateModel.success(result.status)
+                    is GetStatusesResult.Failure ->
+                        MainUiStateModel.GetStatusesMainUiStateModel.failure(result.message, result.statusCode)
+                    is GetStatusesResult.InProgress ->
+                        MainUiStateModel.GetStatusesMainUiStateModel.inProgress()
+                }
+            }
+            EndStatusesResult -> MainUiStateModel.EndStatusesMainUiStateModel
         }
     }
 
@@ -118,6 +136,29 @@ class MainViewModel(private val quidditchPlayersService: QuidditchPlayersService
         }
     }
 
+    private val getStatuses = ObservableTransformer<Event, GetStatusesResult> { event ->
+        event.flatMap {
+            quidditchPlayersService.getStatuses().toObservable()
+                    .map { positions -> GetStatusesResult.Success(positions) }
+                    .cast(GetStatusesResult::class.java)
+                    .onErrorReturn { error -> GetStatusesResult.Failure(error) }
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .startWith(GetStatusesResult.InProgress)
+        }
+    }
+
+    private val endStatuses = ObservableTransformer<Event, EndStatusesResult> { event ->
+        event.flatMap {
+            quidditchPlayersService.endStatusUpdates().toObservable()
+                    .map { _ -> EndStatusesResult }
+                    .cast(EndStatusesResult::class.java)
+                    .onErrorReturn { _ -> EndStatusesResult }
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+        }
+    }
+
     private fun getPlayersAndPositions(
             playersObservable: Observable<GetPlayersResult>,
             positionsObservable: Observable<GetPositionsResult>
@@ -135,34 +176,49 @@ class MainViewModel(private val quidditchPlayersService: QuidditchPlayersService
                         positionsMap[position.id] = position.positionName
                     }
 
-
-                    for(player in players) {
+                    for ((index, player) in players.withIndex()) {
                         player.positionName = positionsMap[player.position] ?: ""
+                        player.status = "No Status"
+                        playersIndexMap[player.id] = index
                     }
 
-
-                    Result.GetPlayersAndPositionsResult.Success(players)
+                    GetPlayersAndPositionsResult.Success(players)
                 }
         )
-                .onErrorReturn { error -> Result.GetPlayersAndPositionsResult.Failure(error) }
+                .onErrorReturn { error -> GetPlayersAndPositionsResult.Failure(error) }
                 .observeOn(AndroidSchedulers.mainThread())
-                .startWith(Result.GetPlayersAndPositionsResult.InProgress)
+                .startWith(GetPlayersAndPositionsResult.InProgress)
     }
-
 
     private fun subscribeStateModelRender(mainUiStateModel: MainUiStateModel) {
 
-        if (mainUiStateModel.inProgress) {
-
-        } else {
-
-            if (mainUiStateModel.success) {
-                playersMutableLiveData.value = mainUiStateModel.playerList
+        if (mainUiStateModel is MainUiStateModel.GetPlayersMainUiStateModel) {
+            if (mainUiStateModel.inProgress) {
+                //TODO add timber logger
             } else {
-                Log.d("HERE_", "error message: " + mainUiStateModel.errorMessage)
-                Log.d("HERE_", "error status: " + mainUiStateModel.statusCode)
-            }
 
+                if (mainUiStateModel.success) {
+                    playersMutableLiveData.value = mainUiStateModel.playerList
+                } else {
+                    Log.d("HERE_", "error message: " + mainUiStateModel.errorMessage)
+                    Log.d("HERE_", "error status: " + mainUiStateModel.statusCode)
+                }
+
+            }
+        } else if (mainUiStateModel is MainUiStateModel.GetStatusesMainUiStateModel) {
+            if (mainUiStateModel.inProgress) {
+                //TODO add timber logger
+            } else {
+
+                if (mainUiStateModel.success) {
+                    statusMutableLiveData.value = mainUiStateModel.status
+                } else {
+                    Log.d("HERE_", "error message: " + mainUiStateModel.errorMessage)
+                    Log.d("HERE_", "error status: " + mainUiStateModel.statusCode)
+                }
+            }
+        } else if (mainUiStateModel is MainUiStateModel.EndStatusesMainUiStateModel) {
+            Log.d("HERE_", "EndStatuses")
         }
     }
 }

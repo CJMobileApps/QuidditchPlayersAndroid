@@ -4,4 +4,6 @@ sealed class Event {
     object GetPlayersEvent: Event()
     object GetPositionsEvent: Event()
     object GetPlayersAndPositionsEvent: Event()
+    object GetStatusesEvent: Event()
+    object EndStatusesEvent: Event()
 }

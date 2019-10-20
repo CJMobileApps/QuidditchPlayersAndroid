@@ -2,6 +2,7 @@ package com.cjmobileapps.quidditchplayersandroid.ui.viewmodel.rx
 
 import com.cjmobileapps.quidditchplayersandroid.network.models.Player
 import com.cjmobileapps.quidditchplayersandroid.network.models.Position
+import com.cjmobileapps.quidditchplayersandroid.network.models.Status
 import retrofit2.HttpException
 
 sealed class Result {
@@ -104,4 +105,39 @@ sealed class Result {
 
         object InProgress : GetPlayersAndPositionsResult()
     }
+
+    sealed class GetStatusesResult : Result() {
+        data class Success(val status: Status) : GetStatusesResult()
+
+        //TODO add failure wrapper
+        data class Failure(var throwable: Throwable) : GetStatusesResult() {
+
+            val statusCode: Int
+                get() {
+                    if (throwable is HttpException) {
+                        return (throwable as HttpException).code()
+                    }
+
+                    return Int.MIN_VALUE
+                }
+
+            val message: String
+                get() {
+                    if (throwable is HttpException) {
+                        var message = (throwable as HttpException).message()
+                        if (message.isNullOrEmpty()) {
+                            message = "Network call error"
+                        }
+
+                        return message
+                    }
+
+                    return throwable.message ?: ""
+                }
+        }
+
+        object InProgress : GetStatusesResult()
+    }
+
+    object EndStatusesResult: Result()
 }

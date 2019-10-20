@@ -143,24 +143,24 @@
                 android:layout_marginTop="5dp"
                 android:text="@string/status"
                 android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@+id/playerRow_statusText"
                 app:layout_constraintEnd_toStartOf="@+id/playerRow_statusText"
                 app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/playerRow_yearsPlayedHeader" />
+                app:layout_constraintTop_toTopOf="@+id/playerRow_statusText" />
 
             <TextView
                 android:id="@+id/playerRow_statusText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:text="@string/no_status"
+                android:text="@{player.status}"
                 android:textColor="@color/black"
                 android:textSize="16sp"
-                app:layout_constraintBottom_toBottomOf="@+id/playerRow_statusHeader"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_weight="3"
                 app:layout_constraintStart_toEndOf="@+id/playerRow_statusHeader"
-                app:layout_constraintTop_toTopOf="@+id/playerRow_statusHeader"
+                app:layout_constraintTop_toBottomOf="@+id/playerRow_yearsPlayedHeader"
                 tools:text="Some status" />
 
 
@@ -173,3 +173,5 @@
     <!-- todo add player details -->
     <!-- todo add more players from other houses -->
     <!-- todo change house color based on house red gree yellow -->
+    <!-- todo retrun a map from the backend for positions -->
+    <!-- todo add a space between first and last name on statuses -->

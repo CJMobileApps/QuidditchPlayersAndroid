@@ -19,6 +19,8 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var mainViewModel: MainViewModel
 
+    lateinit var mainAdapter: MainAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -33,7 +35,16 @@ class MainActivity : AppCompatActivity() {
         binding.mainActivityPlayers.layoutManager = LinearLayoutManager(this)
 
         mainViewModel.players.observe(this, Observer { players ->
-            binding.mainActivityPlayers.adapter = MainAdapter(players)
+            mainAdapter = MainAdapter(players)
+            binding.mainActivityPlayers.adapter = mainAdapter
+            mainViewModel.processEvent(Event.GetStatusesEvent)
+        })
+        mainViewModel.status.observe(this, Observer { status ->
+            val index = mainViewModel.playersIndexMap[status.id]
+            if (index != null) {
+                mainAdapter.players[index].status = status.status
+                mainAdapter.notifyItemChanged(index)
+            }
         })
 
         mainViewModel.initRx()

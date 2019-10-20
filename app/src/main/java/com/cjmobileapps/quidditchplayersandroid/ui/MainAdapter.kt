@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.cjmobileapps.quidditchplayersandroid.databinding.RowPlayerBinding
 import com.cjmobileapps.quidditchplayersandroid.network.models.Player
 
-class MainAdapter(private val players: List<Player>) : RecyclerView.Adapter<MainAdapter.MainAdapterHolder>() {
+class MainAdapter(val players: List<Player>) : RecyclerView.Adapter<MainAdapter.MainAdapterHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainAdapterHolder {
         val binding = RowPlayerBinding.inflate(LayoutInflater.from(parent.context), parent, false)

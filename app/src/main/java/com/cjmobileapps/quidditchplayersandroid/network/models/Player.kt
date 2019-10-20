@@ -1,6 +1,7 @@
 package com.cjmobileapps.quidditchplayersandroid.network.models
 
 data class Player(
+   val id: Int,
    val firstName: String,
    val lastName: String,
    val favoriteSubject: String,
@@ -11,4 +12,6 @@ data class Player(
 ) {
     val fullName: String
         get() = "$firstName $lastName"
+
+    var status: String = ""
 }
