@@ -1,4 +1,4 @@
-package com.cjmobileapps.quidditchplayersandroid.viewutil
+package com.cjmobileapps.quidditchplayersandroid.util.viewutil
 
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter

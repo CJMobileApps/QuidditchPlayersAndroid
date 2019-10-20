@@ -1,32 +1,33 @@
 package com.cjmobileapps.quidditchplayersandroid.network
 
-import android.util.Log
 import com.cjmobileapps.quidditchplayersandroid.network.models.Status
 import com.google.gson.Gson
 import okhttp3.*
+import timber.log.Timber
 
 class WebSocketRepository(private val client: OkHttpClient, private val url: String) {
 
     private var webSocket: WebSocket? = null
     private val CLOSE_NORMAL = 1000
+    private val tag = WebSocketRepository::class.java.simpleName
 
     fun connectToStatuses(statusListener: StatusListener) {
         if (webSocket == null) {
             webSocket = client.newWebSocket(Request.Builder().url(url).build(), object: WebSocketListener() {
 
                 override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
-                    Log.d("HERE_","onCLosed")
+                    Timber.tag(tag).e("WebSocket closed: $reason")
                     super.onClosed(webSocket, code, reason)
                 }
 
                 override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
-                    Log.d("HERE_", "t: " + t.toString())
-                    Log.d("HERE_", "response: " + response)
+                    Timber.tag(tag).e("WebSocket failed throwable: $t")
+                    Timber.tag(tag).e("WebSocket failed response: $response")
                     super.onFailure(webSocket, t, response)
                 }
 
                 override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
-                    Log.d("HERE_", "reason " + reason)
+                    Timber.tag(tag).e("WebSocket closing: $reason")
                     super.onClosing(webSocket, code, reason)
                 }
 

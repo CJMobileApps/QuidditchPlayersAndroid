@@ -20,7 +20,7 @@
             android:layout_height="match_parent"
             android:layout_margin="10dp">
 
-            <com.cjmobileapps.quidditchplayersandroid.viewutil.RoundedImageView
+            <com.cjmobileapps.quidditchplayersandroid.util.viewutil.RoundedImageView
                 android:id="@+id/playerRow_image"
                 android:layout_width="60dp"
                 android:layout_height="60dp"

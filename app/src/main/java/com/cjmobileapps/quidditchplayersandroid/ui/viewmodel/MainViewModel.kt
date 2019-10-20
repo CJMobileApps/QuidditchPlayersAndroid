@@ -1,6 +1,5 @@
 package com.cjmobileapps.quidditchplayersandroid.ui.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -18,6 +17,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.BiFunction
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
+import timber.log.Timber
 
 class MainViewModel(private val quidditchPlayersService: QuidditchPlayersService) : ViewModel() {
     private lateinit var compositeDisposable: CompositeDisposable
@@ -26,6 +26,7 @@ class MainViewModel(private val quidditchPlayersService: QuidditchPlayersService
     private val statusMutableLiveData = MutableLiveData<Status>()
     val players: LiveData<List<Player>> = playersMutableLiveData
     val status: LiveData<Status> = statusMutableLiveData
+    val tag = MainViewModel::class.java.simpleName
 
     //Key = Id & Value = index
     val playersIndexMap = hashMapOf<Int, Int>()
@@ -35,8 +36,7 @@ class MainViewModel(private val quidditchPlayersService: QuidditchPlayersService
         compositeDisposable.add(compose().subscribe({ mainUiStateModel ->
             subscribeStateModelRender(mainUiStateModel)
         }, { error ->
-            //TODO replace logging with timber
-            Log.d("HERE_", "error: $error")
+            Timber.tag(tag).e("error: $error")
         }))
     }
 
@@ -194,31 +194,31 @@ class MainViewModel(private val quidditchPlayersService: QuidditchPlayersService
 
         if (mainUiStateModel is MainUiStateModel.GetPlayersMainUiStateModel) {
             if (mainUiStateModel.inProgress) {
-                //TODO add timber logger
+                Timber.tag(tag).d("GetPlayers call in progress")
             } else {
 
                 if (mainUiStateModel.success) {
                     playersMutableLiveData.value = mainUiStateModel.playerList
                 } else {
-                    Log.d("HERE_", "error message: " + mainUiStateModel.errorMessage)
-                    Log.d("HERE_", "error status: " + mainUiStateModel.statusCode)
+                    Timber.tag(tag).e("GetPlayers call error message: %s", mainUiStateModel.errorMessage)
+                    Timber.tag(tag).e("GetPlayers call error message: %s", mainUiStateModel.errorMessage)
                 }
 
             }
         } else if (mainUiStateModel is MainUiStateModel.GetStatusesMainUiStateModel) {
             if (mainUiStateModel.inProgress) {
-                //TODO add timber logger
+                Timber.tag(tag).d("GetStatuses call in progress")
             } else {
 
                 if (mainUiStateModel.success) {
                     statusMutableLiveData.value = mainUiStateModel.status
                 } else {
-                    Log.d("HERE_", "error message: " + mainUiStateModel.errorMessage)
-                    Log.d("HERE_", "error status: " + mainUiStateModel.statusCode)
+                    Timber.tag(tag).e("GetStatuses call error message: %s", mainUiStateModel.errorMessage)
+                    Timber.tag(tag).e("GetStatuses call error message: %s", mainUiStateModel.errorMessage)
                 }
             }
         } else if (mainUiStateModel is MainUiStateModel.EndStatusesMainUiStateModel) {
-            Log.d("HERE_", "EndStatuses")
+            Timber.tag(tag).d("EndStatuses")
         }
     }
 }

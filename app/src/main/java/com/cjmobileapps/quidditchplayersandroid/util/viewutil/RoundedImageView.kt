@@ -1,4 +1,4 @@
-package com.cjmobileapps.quidditchplayersandroid.viewutil
+package com.cjmobileapps.quidditchplayersandroid.util.viewutil
 
 import android.content.Context
 import android.graphics.*

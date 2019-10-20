@@ -6,6 +6,7 @@ import android.content.Context
 import com.cjmobileapps.quidditchplayersandroid.dagger.DaggerQuidditchPlayersApplicationComponent
 import com.cjmobileapps.quidditchplayersandroid.dagger.QuidditchPlayersApplicationComponent
 import com.cjmobileapps.quidditchplayersandroid.dagger.module.ContextModule
+import timber.log.Timber
 
 class QuidditchPlayersApplication  : Application() {
 
@@ -29,5 +30,9 @@ class QuidditchPlayersApplication  : Application() {
                 .contextModule(ContextModule(this)).build()
 
         quidditchPlayersApplicationComponent.injectQuidditchPlayersApplicationComponent(this)
+
+        if (BuildConfig.DEBUG) {
+            Timber.plant(Timber.DebugTree())
+        }
     }
 }
