@@ -4,6 +4,8 @@ import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatImageView
+import androidx.core.content.ContextCompat
+import com.cjmobileapps.quidditchplayersandroid.R
 
 class RoundedImageView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) : AppCompatImageView(context, attrs, defStyle) {
     private val radius = 8.0F
@@ -21,7 +23,7 @@ class RoundedImageView @JvmOverloads constructor(context: Context, attrs: Attrib
         paint = Paint()
         paint.isAntiAlias = true
         paint.style = Paint.Style.STROKE
-        paint.color = Color.BLACK
+        paint.color = ContextCompat.getColor(context, R.color.colorPrimary)
         paint.strokeWidth = strokeWidth
     }
 
