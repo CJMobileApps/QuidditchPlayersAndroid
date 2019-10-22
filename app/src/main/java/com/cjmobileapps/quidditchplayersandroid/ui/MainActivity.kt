@@ -2,15 +2,14 @@ package com.cjmobileapps.quidditchplayersandroid.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cjmobileapps.quidditchplayersandroid.QuidditchPlayersApplication
 import com.cjmobileapps.quidditchplayersandroid.R
-import com.cjmobileapps.quidditchplayersandroid.databinding.ActivityMainBinding
 import com.cjmobileapps.quidditchplayersandroid.ui.dagger.DaggerMainComponent
 import com.cjmobileapps.quidditchplayersandroid.ui.dagger.MainModule
 import com.cjmobileapps.quidditchplayersandroid.ui.viewmodel.MainViewModel
+import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
@@ -22,6 +21,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
 
         val quidditchPlayersApplication = QuidditchPlayersApplication.get(this)
 
@@ -30,12 +30,12 @@ class MainActivity : AppCompatActivity() {
                 .quidditchPlayersApplicationComponent(quidditchPlayersApplication.quidditchPlayersApplicationComponent)
                 .build()
                 .inject(this)
-        val binding = DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
-        binding.mainActivityPlayers.layoutManager = LinearLayoutManager(this)
+
+        mainActivity_players.layoutManager = LinearLayoutManager(this)
 
         mainViewModel.players.observe(this, Observer { players ->
             mainAdapter = MainAdapter(players)
-            binding.mainActivityPlayers.adapter = mainAdapter
+            mainActivity_players.adapter = mainAdapter
             mainViewModel.listenToStatuses()
         })
         mainViewModel.status.observe(this, Observer { status ->

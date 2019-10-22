@@ -1,172 +1,156 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="4dp">
 
-    <data>
-
-        <variable
-            name="player"
-            type="com.cjmobileapps.quidditchplayersandroid.network.models.Player" />
-    </data>
-
-    <com.google.android.material.card.MaterialCardView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="4dp">
+        android:layout_height="match_parent"
+        android:layout_margin="10dp">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="10dp">
+        <com.cjmobileapps.quidditchplayersandroid.util.viewutil.RoundedImageView
+            android:id="@+id/playerRow_image"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:scaleType="fitXY"
+            app:layout_constraintEnd_toStartOf="@id/playerRow_name"
+            app:layout_constraintStart_toStartOf="parent "
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <com.cjmobileapps.quidditchplayersandroid.util.viewutil.RoundedImageView
-                android:id="@+id/playerRow_image"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:scaleType="fitXY"
-                app:imageUrl="@{player.imageUrl}"
-                app:layout_constraintEnd_toStartOf="@id/playerRow_name"
-                app:layout_constraintStart_toStartOf="parent "
-                app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/playerRow_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/playerRow_image"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Harry Potter" />
 
-            <TextView
-                android:id="@+id/playerRow_name"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:text="@{player.fullName}"
-                android:textColor="@android:color/black"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/playerRow_image"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="Harry Potter" />
+        <TextView
+            android:id="@+id/playerRow_position"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/playerRow_image"
+            app:layout_constraintTop_toBottomOf="@+id/playerRow_name"
+            tools:text="Seeker" />
 
-            <TextView
-                android:id="@+id/playerRow_position"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:text="@{player.positionName}"
-                android:textSize="16sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/playerRow_image"
-                app:layout_constraintTop_toBottomOf="@+id/playerRow_name"
-                tools:text="Seeker" />
+        <TextView
+            android:id="@+id/playerRow_houseHeader"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/house"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toStartOf="@+id/playerRow_houseText"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/playerRow_image" />
 
-            <TextView
-                android:id="@+id/playerRow_houseHeader"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="@string/house"
-                android:textSize="16sp"
-                app:layout_constraintEnd_toStartOf="@+id/playerRow_houseText"
-                app:layout_constraintHorizontal_weight="1"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/playerRow_image" />
+        <TextView
+            android:id="@+id/playerRow_houseText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="@string/gryffindor"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/playerRow_houseHeader"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="3"
+            app:layout_constraintStart_toEndOf="@+id/playerRow_houseHeader"
+            app:layout_constraintTop_toTopOf="@+id/playerRow_houseHeader" />
 
-            <TextView
-                android:id="@+id/playerRow_houseText"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:text="@string/gryffindor"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                app:layout_constraintBottom_toBottomOf="@+id/playerRow_houseHeader"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_weight="3"
-                app:layout_constraintStart_toEndOf="@+id/playerRow_houseHeader"
-                app:layout_constraintTop_toTopOf="@+id/playerRow_houseHeader" />
+        <TextView
+            android:id="@+id/playerRow_favoriteSubjectHeader"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="@string/favorite_subject"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toStartOf="@+id/playerRow_houseText"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/playerRow_houseHeader" />
 
-            <TextView
-                android:id="@+id/playerRow_favoriteSubjectHeader"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="@string/favorite_subject"
-                android:textSize="16sp"
-                app:layout_constraintEnd_toStartOf="@+id/playerRow_houseText"
-                app:layout_constraintHorizontal_weight="1"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/playerRow_houseHeader" />
+        <TextView
+            android:id="@+id/playerRow_favoriteSubjectText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/playerRow_favoriteSubjectHeader"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="3"
+            app:layout_constraintStart_toEndOf="@+id/playerRow_houseHeader"
+            app:layout_constraintTop_toTopOf="@+id/playerRow_favoriteSubjectHeader"
+            tools:text="Defense Against The Dark Arts" />
 
-            <TextView
-                android:id="@+id/playerRow_favoriteSubjectText"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:text="@{player.favoriteSubject}"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                app:layout_constraintBottom_toBottomOf="@+id/playerRow_favoriteSubjectHeader"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_weight="3"
-                app:layout_constraintStart_toEndOf="@+id/playerRow_houseHeader"
-                app:layout_constraintTop_toTopOf="@+id/playerRow_favoriteSubjectHeader"
-                tools:text="Defense Against The Dark Arts" />
+        <TextView
+            android:id="@+id/playerRow_yearsPlayedHeader"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="@string/years_played"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toStartOf="@+id/playerRow_yearsPlayedText"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/playerRow_favoriteSubjectHeader" />
 
-            <TextView
-                android:id="@+id/playerRow_yearsPlayedHeader"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="@string/years_played"
-                android:textSize="16sp"
-                app:layout_constraintEnd_toStartOf="@+id/playerRow_yearsPlayedText"
-                app:layout_constraintHorizontal_weight="1"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/playerRow_favoriteSubjectHeader" />
+        <TextView
+            android:id="@+id/playerRow_yearsPlayedText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/playerRow_yearsPlayedHeader"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="3"
+            app:layout_constraintStart_toEndOf="@+id/playerRow_yearsPlayedHeader"
+            app:layout_constraintTop_toTopOf="@+id/playerRow_yearsPlayedHeader"
+            tools:text="[1991, 1992]" />
 
-            <TextView
-                android:id="@+id/playerRow_yearsPlayedText"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:text="@{player.yearsPlayed.toString()}"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                app:layout_constraintBottom_toBottomOf="@+id/playerRow_yearsPlayedHeader"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_weight="3"
-                app:layout_constraintStart_toEndOf="@+id/playerRow_yearsPlayedHeader"
-                app:layout_constraintTop_toTopOf="@+id/playerRow_yearsPlayedHeader"
-                tools:text="[1991, 1992]" />
+        <TextView
+            android:id="@+id/playerRow_statusHeader"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="@string/status"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/playerRow_statusText"
+            app:layout_constraintEnd_toStartOf="@+id/playerRow_statusText"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/playerRow_statusText" />
 
-            <TextView
-                android:id="@+id/playerRow_statusHeader"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="@string/status"
-                android:textSize="16sp"
-                app:layout_constraintBottom_toBottomOf="@+id/playerRow_statusText"
-                app:layout_constraintEnd_toStartOf="@+id/playerRow_statusText"
-                app:layout_constraintHorizontal_weight="1"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/playerRow_statusText" />
-
-            <TextView
-                android:id="@+id/playerRow_statusText"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:text="@{player.status}"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_weight="3"
-                app:layout_constraintStart_toEndOf="@+id/playerRow_statusHeader"
-                app:layout_constraintTop_toBottomOf="@+id/playerRow_yearsPlayedHeader"
-                tools:text="Some status" />
+        <TextView
+            android:id="@+id/playerRow_statusText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="3"
+            app:layout_constraintStart_toEndOf="@+id/playerRow_statusHeader"
+            app:layout_constraintTop_toBottomOf="@+id/playerRow_yearsPlayedHeader"
+            tools:text="Some status" />
 
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </com.google.android.material.card.MaterialCardView>
-</layout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>
 
     <!-- todo this should be sent from the server which house I mean-->
     <!-- todo add if was captain below position with a C emoji-->
