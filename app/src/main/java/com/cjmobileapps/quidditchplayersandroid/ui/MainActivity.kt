@@ -11,7 +11,6 @@ import com.cjmobileapps.quidditchplayersandroid.databinding.ActivityMainBinding
 import com.cjmobileapps.quidditchplayersandroid.ui.dagger.DaggerMainComponent
 import com.cjmobileapps.quidditchplayersandroid.ui.dagger.MainModule
 import com.cjmobileapps.quidditchplayersandroid.ui.viewmodel.MainViewModel
-import com.cjmobileapps.quidditchplayersandroid.ui.viewmodel.rx.Event
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
@@ -37,7 +36,7 @@ class MainActivity : AppCompatActivity() {
         mainViewModel.players.observe(this, Observer { players ->
             mainAdapter = MainAdapter(players)
             binding.mainActivityPlayers.adapter = mainAdapter
-            mainViewModel.processEvent(Event.GetStatusesEvent)
+            mainViewModel.listenToStatuses()
         })
         mainViewModel.status.observe(this, Observer { status ->
             val index = mainViewModel.playersIndexMap[status.id]
@@ -47,7 +46,6 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        mainViewModel.initRx()
-        mainViewModel.processEvent(Event.GetPlayersAndPositionsEvent)
+        mainViewModel.initCoroutineJobs()
     }
 }

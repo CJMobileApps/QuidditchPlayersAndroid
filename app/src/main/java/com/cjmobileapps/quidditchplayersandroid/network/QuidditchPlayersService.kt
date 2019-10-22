@@ -3,13 +3,12 @@ package com.cjmobileapps.quidditchplayersandroid.network
 import com.cjmobileapps.quidditchplayersandroid.network.models.Status
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
-import io.reactivex.Single
 
 class QuidditchPlayersService(private val quidditchPlayersApi: QuidditchPlayersApi, private val webSocketRepository: WebSocketRepository) {
 
-    fun getPlayers() = quidditchPlayersApi.getPlayers()
+    fun getPlayersAsync()  =  quidditchPlayersApi.getPlayersAsync()
 
-    fun getPositions() = quidditchPlayersApi.getPositions()
+    fun getPositionsAsync() = quidditchPlayersApi.getPositionsAsync()
 
     fun getStatuses(): Flowable<Status> {
         return Flowable.create<Status>({ emitter ->
@@ -21,9 +20,7 @@ class QuidditchPlayersService(private val quidditchPlayersApi: QuidditchPlayersA
         }, BackpressureStrategy.LATEST)
     }
 
-    fun endStatusUpdates(): Single<Boolean> {
-        return Single.create<Boolean> { emitter ->
-            emitter.onSuccess(webSocketRepository.disconnectFromStatuses())
-        }
+    fun endStatusUpdates(): Boolean {
+        return webSocketRepository.disconnectFromStatuses()
     }
 }

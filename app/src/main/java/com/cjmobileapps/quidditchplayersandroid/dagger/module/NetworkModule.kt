@@ -6,12 +6,12 @@ import com.cjmobileapps.quidditchplayersandroid.dagger.QuidditchPlayersApplicati
 import com.cjmobileapps.quidditchplayersandroid.network.QuidditchPlayersApi
 import com.cjmobileapps.quidditchplayersandroid.network.QuidditchPlayersService
 import com.cjmobileapps.quidditchplayersandroid.network.WebSocketRepository
+import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import dagger.Module
 import dagger.Provides
 import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
 import java.io.IOException
@@ -81,7 +81,7 @@ class NetworkModule {
         return Retrofit.Builder()
                 .baseUrl("https://cjmobileapps.com/")
                 .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addCallAdapterFactory(CoroutineCallAdapterFactory())
                 .client(okHttpClient)
                 .build()
     }
@@ -101,6 +101,6 @@ class NetworkModule {
     @QuidditchPlayersApplicationScope
     @Provides
     fun webSocketRepository(okHttpClient: OkHttpClient): WebSocketRepository {
-        return WebSocketRepository(okHttpClient,"wss://cjmobileapps.com/api/v1/quidditch/status")
+        return WebSocketRepository(okHttpClient, "wss://cjmobileapps.com/api/v1/quidditch/status")
     }
 }
