@@ -1,6 +1,6 @@
 # Quidditch Players Android
 
-This is an app that displays Quidditch players for Android. Each individual player is displayed in a list. The list is the updated every few seconds with a certain player status update.
+This is an app that displays Quidditch players for Android. Each individual player is displayed in a list. The list is then updated every few seconds with a certain player's status update.
 
 ## Branches
 
@@ -177,9 +177,9 @@ The following functionality is completed:
 
      ```
      * [X] Part 3: Combine the two list and show the results in a list.
-     * [X] Part 4: Make call to following the following WebSocket end point: http://ios-hiring-backend.dokku.canillitapp.com
+     * [X] Part 4: Make call to following the following WebSocket end point: wss://cjmobileapps.com/api/v1/quidditch/status
 
-     1) Status updates
+     1) Status updates JSON
 
      ```
      {
@@ -200,15 +200,15 @@ Here's a screenshot and walkthrough video of implemented user stories:
 
 <img src='https://i.imgur.com/vjyie1q.jpg' title='User Story 1 Screen shot' width='' alt='User Story 1 Screen Shot' />
 
-<img src='https://i.imgur.com/KyWVPjd.jpg' title='User Story 1 video walkthrough' width='' alt='User Story 1 Video Walkthrough' />
+<img src='https://media.giphy.com/media/jUzitXJmfIjVKA2E5X/giphy.gif' title='User Story 1 video walkthrough' width='' alt='User Story 1 Video Walkthrough' />
 
 
 ## Open source libraries
 
-- [Retrofit](http://square.github.io/retrofit/) - A type-safe HTTP client for Android and Java
-- [Picasso](http://square.github.io/picasso/) - Image loading and caching library for Android
-- [OkHttp](http://square.github.io/okhttp/) - An HTTP & HTTP/2 client for Android and Java applications
-- [Gson](https://github.com/google/gson) - A Java serialization/deserialization library to convert Java Objects into JSON and back
+- [Retrofit](http://square.github.io/retrofit/) - A type-safe HTTP client for Android and Java.
+- [Picasso](http://square.github.io/picasso/) - Image loading and caching library for Android.
+- [OkHttp](http://square.github.io/okhttp/) - An HTTP & HTTP/2 client for Android and Java applications.
+- [Gson](https://github.com/google/gson) - A Java serialization/deserialization library to convert Java Objects into JSON and back.
 - [RxAndroid](https://github.com/ReactiveX/RxJava) - RxJava – Reactive Extensions for the JVM – a library for composing asynchronous and event-based programs using observable sequences for the Java VM.
-- [Mockito](https://github.com/mockito/mockito) - Most popular Mocking framework for unit tests written in Java
+- [Mockito](https://github.com/mockito/mockito) - Most popular Mocking framework for unit tests written in Java.
 - [Timber](https://github.com/JakeWharton/timber) - A logger with a small, extensible API which provides utility on top of Android's normal Log class.
