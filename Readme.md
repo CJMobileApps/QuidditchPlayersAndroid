@@ -177,7 +177,7 @@ The following functionality is completed:
 
      ```
      * [X] Part 3: Combine the two list and show the results in a list.
-     * [X] Part 4: Make call to following the following WebSocket end point: wss://cjmobileapps.com/api/v1/quidditch/status
+     * [X] Part 4: Make call to following the following WebSocket end point: ***wss://cjmobileapps.com/api/v1/quidditch/status***
 
      1) Status updates JSON
 
