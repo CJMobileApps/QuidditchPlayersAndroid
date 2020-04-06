@@ -2,6 +2,9 @@ package com.cjmobileapps.quidditchplayersandroid.network
 
 import com.cjmobileapps.quidditchplayersandroid.network.models.Status
 import com.google.gson.Gson
+import io.reactivex.BackpressureStrategy
+import io.reactivex.Flowable
+import io.reactivex.Single
 import okhttp3.*
 import timber.log.Timber
 
@@ -11,7 +14,17 @@ class WebSocketRepository(private val client: OkHttpClient, private val url: Str
     private val CLOSE_NORMAL = 1000
     private val tag = WebSocketRepository::class.java.simpleName
 
-    fun connectToStatuses(statusListener: StatusListener) {
+    fun getStatuses(): Flowable<Status> {
+        return Flowable.create<Status>({ emitter ->
+            connectToStatuses(object : StatusListener {
+                override fun onStatus(status: Status) {
+                    emitter.onNext(status)
+                }
+            })
+        }, BackpressureStrategy.LATEST)
+    }
+
+    private fun connectToStatuses(statusListener: StatusListener) {
         if (webSocket == null) {
             webSocket = client.newWebSocket(Request.Builder().url(url).build(), object: WebSocketListener() {
 
@@ -39,9 +52,15 @@ class WebSocketRepository(private val client: OkHttpClient, private val url: Str
         }
     }
 
-    fun disconnectFromStatuses() : Boolean {
+    private fun disconnectFromStatuses() : Boolean {
         webSocket?.close(CLOSE_NORMAL, "Disconnect from statuses")
         return true
+    }
+
+    fun endStatusUpdates(): Single<Boolean> {
+        return Single.create<Boolean> { emitter ->
+            emitter.onSuccess(disconnectFromStatuses())
+        }
     }
 
     interface StatusListener {

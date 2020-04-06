@@ -6,7 +6,7 @@ data class Player(
    val lastName: String,
    val favoriteSubject: String,
    val position: Int,
-   var positionName: String?,
+   var positionName: String? = null,
    val imageUrl: String,
    val yearsPlayed: List<Int>
 ) {
