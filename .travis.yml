@@ -1,7 +1,5 @@
 language: android
-jdk: oraclejdk7
-sudo: false
-os: linux
+dist: trusty
 
 android:
   components:
