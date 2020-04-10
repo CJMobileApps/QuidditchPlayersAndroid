@@ -1,5 +1,11 @@
 # Quidditch Players Android
 
+[![Build Status](https://travis-ci.com/CJMobileApps/QuidditchPlayersAndroid.svg?branch=master)](https://travis-ci.com/CJMobileApps/QuidditchPlayersAndroid)
+
+![GitHub](https://img.shields.io/github/license/CJMobileApps/QuidditchPlayersAndroid)
+
+
+
 This is an app that displays Quidditch players for Android. Each individual player is displayed in a list. The list is then updated every few seconds with a certain player's status update.
 
 ## Branches
