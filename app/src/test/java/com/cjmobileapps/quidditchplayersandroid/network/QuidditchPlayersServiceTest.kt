@@ -1,19 +1,19 @@
 package com.cjmobileapps.quidditchplayersandroid.network
 
+import com.cjmobileapps.quidditchplayersandroid.BaseTest
 import com.cjmobileapps.quidditchplayersandroid.network.models.Player
 import com.cjmobileapps.quidditchplayersandroid.network.models.Position
 import com.cjmobileapps.quidditchplayersandroid.network.models.Status
+import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Flowable
 import io.reactivex.Single
 import junit.framework.TestCase.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
-import org.mockito.stubbing.OngoingStubbing
 
-class QuidditchPlayersServiceTest {
+class QuidditchPlayersServiceTest: BaseTest() {
 
     @Mock
     lateinit var mockQuidditchPlayersApi: QuidditchPlayersApi
@@ -22,10 +22,6 @@ class QuidditchPlayersServiceTest {
     lateinit var mockWebSocketRepository: WebSocketRepository
 
     private lateinit var quidditchPlayersService: QuidditchPlayersService
-
-    // To avoid having to use backticks for "when"
-    private fun <T> whenever(methodCall: T): OngoingStubbing<T> =
-            Mockito.`when`(methodCall)
 
     private val mockPlayers = listOf(
             Player(
@@ -111,7 +107,7 @@ class QuidditchPlayersServiceTest {
     fun getPlayers_whenServiceGetPlayersCalled() {
 
         // When
-        Mockito.`when`(mockQuidditchPlayersApi.getPlayers()).thenReturn(Single.just(mockPlayers))
+        whenever(mockQuidditchPlayersApi.getPlayers()).thenReturn(Single.just(mockPlayers))
 
         // Then
         val players = quidditchPlayersService.getPlayers()

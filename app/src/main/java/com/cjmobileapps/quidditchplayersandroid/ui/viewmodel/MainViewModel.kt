@@ -33,12 +33,17 @@ class MainViewModel(private val quidditchPlayersService: QuidditchPlayersService
     }
 
     fun getPlayers() {
-        compositeDisposable.add(getPlayersAndPositions(getPlayersObservable, getPositionsObservable))
+        compositeDisposable.add(getPlayersAndPositions(getPlayersObservable(), getPositionsObservable()))
         compositeDisposable.add(getStatuses())
     }
 
-    private val getPlayersObservable: Observable<List<Player>> = quidditchPlayersService.getPlayers().toObservable().subscribeOn(Schedulers.io())
-    private val getPositionsObservable: Observable<List<Position>> = quidditchPlayersService.getPositions().toObservable().subscribeOn(Schedulers.io())
+    private fun getPlayersObservable(): Observable<List<Player>> {
+        return quidditchPlayersService.getPlayers().toObservable().subscribeOn(Schedulers.io())
+    }
+
+    private fun getPositionsObservable(): Observable<List<Position>> {
+        return quidditchPlayersService.getPositions().toObservable().subscribeOn(Schedulers.io())
+    }
 
     private fun getPlayersAndPositions(
             playersObservable: Observable<List<Player>>,
