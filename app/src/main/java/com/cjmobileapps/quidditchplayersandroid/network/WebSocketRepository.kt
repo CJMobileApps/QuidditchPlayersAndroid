@@ -8,13 +8,13 @@ import io.reactivex.Single
 import okhttp3.*
 import timber.log.Timber
 
-class WebSocketRepository(private val client: OkHttpClient, private val url: String) {
+class WebSocketRepository(private val client: OkHttpClient, private val url: String) : WebSocketRepositoryImpl {
 
     private var webSocket: WebSocket? = null
     private val CLOSE_NORMAL = 1000
     private val tag = WebSocketRepository::class.java.simpleName
 
-    fun getStatuses(): Flowable<Status> {
+    override fun getStatuses(): Flowable<Status> {
         return Flowable.create<Status>({ emitter ->
             connectToStatuses(object : StatusListener {
                 override fun onStatus(status: Status) {
@@ -26,7 +26,7 @@ class WebSocketRepository(private val client: OkHttpClient, private val url: Str
 
     private fun connectToStatuses(statusListener: StatusListener) {
         if (webSocket == null) {
-            webSocket = client.newWebSocket(Request.Builder().url(url).build(), object: WebSocketListener() {
+            webSocket = client.newWebSocket(Request.Builder().url(url).build(), object : WebSocketListener() {
 
                 override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
                     Timber.tag(tag).e("WebSocket closed: $reason")
@@ -52,12 +52,12 @@ class WebSocketRepository(private val client: OkHttpClient, private val url: Str
         }
     }
 
-    private fun disconnectFromStatuses() : Boolean {
+    private fun disconnectFromStatuses(): Boolean {
         webSocket?.close(CLOSE_NORMAL, "Disconnect from statuses")
         return true
     }
 
-    fun endStatusUpdates(): Single<Boolean> {
+    override fun endStatusUpdates(): Single<Boolean> {
         return Single.create<Boolean> { emitter ->
             emitter.onSuccess(disconnectFromStatuses())
         }

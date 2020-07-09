@@ -1,10 +1,10 @@
 package com.cjmobileapps.quidditchplayersandroid.ui.viewmodel
 
 import com.cjmobileapps.quidditchplayersandroid.BaseTest
-import com.cjmobileapps.quidditchplayersandroid.network.QuidditchPlayersService
 import com.cjmobileapps.quidditchplayersandroid.network.models.Player
 import com.cjmobileapps.quidditchplayersandroid.network.models.Position
 import com.cjmobileapps.quidditchplayersandroid.network.models.Status
+import com.cjmobileapps.quidditchplayersandroid.network.models.service.QuidditchPlayersService
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Flowable
 import io.reactivex.Single
@@ -15,7 +15,7 @@ import org.mockito.MockitoAnnotations
 import java.lang.Exception
 
 
-class MainViewModelTest: BaseTest() {
+class MainViewModelTest : BaseTest() {
 
     @Mock
     lateinit var mockQuidditchPlayersService: QuidditchPlayersService

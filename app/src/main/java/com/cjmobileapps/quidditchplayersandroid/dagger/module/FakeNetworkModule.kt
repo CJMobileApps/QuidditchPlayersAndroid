@@ -3,7 +3,7 @@ package com.cjmobileapps.quidditchplayersandroid.dagger.module
 import android.content.Context
 import com.cjmobileapps.quidditchplayersandroid.dagger.QuidditchPlayersApplicationScope
 import com.cjmobileapps.quidditchplayersandroid.network.*
-import com.cjmobileapps.quidditchplayersandroid.network.models.service.QuidditchPlayersService
+import com.cjmobileapps.quidditchplayersandroid.network.models.service.FakeQuidditchPlayersService
 import com.cjmobileapps.quidditchplayersandroid.network.models.service.QuidditchPlayersServiceImpl
 import dagger.Module
 import dagger.Provides
@@ -17,7 +17,7 @@ import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 @Module
-open class NetworkModule {
+open class FakeNetworkModule {
     //Create a cache object part 1.
     @QuidditchPlayersApplicationScope
     @Provides
@@ -94,7 +94,7 @@ open class NetworkModule {
     @QuidditchPlayersApplicationScope
     @Provides
     open fun quidditchPlayersService(quidditchPlayersApi: QuidditchPlayersApi, webSocketRepository: WebSocketRepositoryImpl): QuidditchPlayersServiceImpl {
-        return QuidditchPlayersService(quidditchPlayersApi, webSocketRepository)
+        return FakeQuidditchPlayersService()
     }
 
     @QuidditchPlayersApplicationScope

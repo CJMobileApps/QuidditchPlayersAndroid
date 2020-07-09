@@ -3,10 +3,10 @@ package com.cjmobileapps.quidditchplayersandroid.ui.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.cjmobileapps.quidditchplayersandroid.network.QuidditchPlayersService
 import com.cjmobileapps.quidditchplayersandroid.network.models.Player
 import com.cjmobileapps.quidditchplayersandroid.network.models.Position
 import com.cjmobileapps.quidditchplayersandroid.network.models.Status
+import com.cjmobileapps.quidditchplayersandroid.network.models.service.QuidditchPlayersServiceImpl
 import com.cjmobileapps.quidditchplayersandroid.util.toErrorWrapper
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -16,7 +16,7 @@ import io.reactivex.functions.BiFunction
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 
-class MainViewModel(private val quidditchPlayersService: QuidditchPlayersService) : ViewModel() {
+class MainViewModel(private val quidditchPlayersService: QuidditchPlayersServiceImpl) : ViewModel() {
     private var compositeDisposable: CompositeDisposable = CompositeDisposable()
     private val playersMutableLiveData = MutableLiveData<List<Player>>()
     private val statusMutableLiveData = MutableLiveData<Status>()

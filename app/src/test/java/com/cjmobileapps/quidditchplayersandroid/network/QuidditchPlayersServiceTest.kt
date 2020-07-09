@@ -4,6 +4,7 @@ import com.cjmobileapps.quidditchplayersandroid.BaseTest
 import com.cjmobileapps.quidditchplayersandroid.network.models.Player
 import com.cjmobileapps.quidditchplayersandroid.network.models.Position
 import com.cjmobileapps.quidditchplayersandroid.network.models.Status
+import com.cjmobileapps.quidditchplayersandroid.network.models.service.QuidditchPlayersService
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Flowable
 import io.reactivex.Single
@@ -23,6 +24,7 @@ class QuidditchPlayersServiceTest: BaseTest() {
 
     private lateinit var quidditchPlayersService: QuidditchPlayersService
 
+    //TODO move these mocks
     private val mockPlayers = listOf(
             Player(
                     id = 3,
