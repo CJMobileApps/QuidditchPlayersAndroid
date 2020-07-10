@@ -7,9 +7,9 @@ import retrofit2.http.GET
 
 interface QuidditchPlayersApi {
 
-    @GET("api/v1/quidditch/players")
+    @GET("api/v2/quidditch/player")
     fun getPlayers(): Single<List<Player>>
 
-    @GET("api/v1/quidditch/positions")
+    @GET("api/v2/quidditch/position")
     fun getPositions(): Single<List<Position>>
 }
