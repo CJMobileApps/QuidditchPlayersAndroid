@@ -109,6 +109,6 @@ open class NetworkModule {
     @QuidditchPlayersApplicationScope
     @Provides
     fun webSocketRepository(okHttpClient: OkHttpClient): WebSocketRepositoryImpl {
-        return WebSocketRepository(okHttpClient, "wss://cjmobileapps.com/api/v1/quidditch/status")
+        return WebSocketRepository(okHttpClient, "wss://cjmobileapps.com/api/v2/quidditch/status")
     }
 }

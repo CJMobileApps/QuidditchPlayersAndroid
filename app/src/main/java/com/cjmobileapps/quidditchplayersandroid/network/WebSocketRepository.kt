@@ -1,7 +1,9 @@
 package com.cjmobileapps.quidditchplayersandroid.network
 
 import com.cjmobileapps.quidditchplayersandroid.network.models.Status
+import com.cjmobileapps.quidditchplayersandroid.network.util.ResponseWrapper
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.Single
@@ -45,7 +47,16 @@ class WebSocketRepository(private val client: OkHttpClient, private val url: Str
                 }
 
                 override fun onMessage(webSocket: WebSocket, message: String) {
-                    val status = Gson().fromJson(message, Status::class.java)
+
+                    val type = object : TypeToken<ResponseWrapper<Status>>() {}.type
+                    val responseStatus: ResponseWrapper<Status> = Gson().fromJson(message, type)
+                    val status = responseStatus.data
+
+                    if (status == null) {
+                        Timber.tag(tag).e("WebSocket onMessage: status null")
+                        return
+                    }
+
                     statusListener.onStatus(status)
                 }
             })
