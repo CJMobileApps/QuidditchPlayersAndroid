@@ -40,6 +40,7 @@ class MainViewModel(private val quidditchPlayersService: QuidditchPlayersService
     private fun getPlayersObservable(): Observable<List<Player>> {
         return quidditchPlayersService.getPlayers()
                 .map { response ->
+                    //TODO make custom exception
                     response.data ?: throw Exception("Blah should be a custom exception")
                 }
                 .toObservable()
@@ -50,6 +51,7 @@ class MainViewModel(private val quidditchPlayersService: QuidditchPlayersService
         return quidditchPlayersService.getPositions()
                 .toObservable()
                 .map { response ->
+                    //TODO make custom exception
                     response.data ?: throw Exception("Blah should be a custom exception")
                 }
                 .subscribeOn(Schedulers.io())
