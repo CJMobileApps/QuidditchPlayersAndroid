@@ -15,7 +15,7 @@ import org.junit.runner.RunWith
 
 
 @RunWith(AndroidJUnit4ClassRunner::class)
-class MainActivityTest : BaseEspressoTest()  {
+class MainActivityTest : BaseEspressoTest() {
 
     @get:Rule
     var rule = ActivityScenarioRule(MainActivity::class.java)
@@ -44,7 +44,7 @@ class MainActivityTest : BaseEspressoTest()  {
         onView(withId(R.id.mainActivity_players))
                 .check(matches(atPosition(0, hasDescendant(
                         withText(
-                                FakeData.positions[mockPlayers[0].position - 1].positionName
+                                FakeData.positions[(mockPlayers[0].position).toString()]
                         )
                 ))))
 
@@ -66,7 +66,7 @@ class MainActivityTest : BaseEspressoTest()  {
         onView(withId(R.id.mainActivity_players))
                 .check(matches(atPosition(6, hasDescendant(
                         withText(
-                                FakeData.positions[mockPlayers[6].position - 1].positionName
+                                FakeData.positions[(mockPlayers[6].position).toString()]
                         )
                 ))))
 

@@ -58,7 +58,7 @@ class MainActivityDaggerTest : BaseEspressoTest() {
         onView(ViewMatchers.withId(R.id.mainActivity_players))
                 .check(ViewAssertions.matches(atPosition(0, ViewMatchers.hasDescendant(
                         withText(
-                                FakeData.positions[mockPlayers[0].position - 1].positionName
+                                FakeData.positions[(mockPlayers[0].position).toString()]
                         )
                 ))))
 
@@ -80,7 +80,7 @@ class MainActivityDaggerTest : BaseEspressoTest() {
 
         onView(ViewMatchers.withId(R.id.mainActivity_players))
                 .check(ViewAssertions.matches(atPosition(6, ViewMatchers.hasDescendant(
-                        withText(FakeData.positions[mockPlayers[6].position - 1].positionName)
+                        withText(FakeData.positions[(mockPlayers[6].position).toString()])
                 ))))
 
         onView(ViewMatchers.withId(R.id.mainActivity_players))
@@ -88,5 +88,10 @@ class MainActivityDaggerTest : BaseEspressoTest() {
 
         onView(ViewMatchers.withId(R.id.mainActivity_players))
                 .check(ViewAssertions.matches(atPosition(6, ViewMatchers.hasDescendant(withText(mockPlayers[6].yearsPlayed.toString())))))
+
+        onView(ViewMatchers.withId(R.id.mainActivity_players))
+                .check(ViewAssertions.matches(atPosition(6, ViewMatchers.hasDescendant(
+                        withText(FakeData.status.status)
+                ))))
     }
 }
