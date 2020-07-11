@@ -4,8 +4,8 @@ import android.content.Context
 import com.cjmobileapps.quidditchplayersandroid.dagger.QuidditchPlayersApplicationScope
 import com.cjmobileapps.quidditchplayersandroid.network.*
 import com.cjmobileapps.quidditchplayersandroid.network.interceptor.HeaderInterceptor
-import com.cjmobileapps.quidditchplayersandroid.network.models.service.QuidditchPlayersService
-import com.cjmobileapps.quidditchplayersandroid.network.models.service.QuidditchPlayersServiceImpl
+import com.cjmobileapps.quidditchplayersandroid.network.service.QuidditchPlayersService
+import com.cjmobileapps.quidditchplayersandroid.network.service.QuidditchPlayersServiceImpl
 import dagger.Module
 import dagger.Provides
 import okhttp3.*
@@ -22,20 +22,20 @@ open class NetworkModule {
     @QuidditchPlayersApplicationScope
     @Provides
     fun httpCacheDirectory(context: Context): File {
-        return File(context.getCacheDir(), NetworkConstants.HTTP_CACHE_DIR)
+        return File(context.cacheDir, NetworkConstants.HTTP_CACHE_DIR)
     }
 
     //Create a cache object part 2.
     @QuidditchPlayersApplicationScope
     @Provides
-    open fun cache(httpCacheDirectory: File): Cache {
+    fun cache(httpCacheDirectory: File): Cache {
         return Cache(httpCacheDirectory, NetworkConstants.HTTP_CACHE_SIZE)
     }
 
     //Create a network cache interceptor, setting the max age to 1 minute
     @QuidditchPlayersApplicationScope
     @Provides
-    open fun networkCacheInterceptor(): Interceptor {
+    fun networkCacheInterceptor(): Interceptor {
         return Interceptor { chain ->
             val response = chain.proceed(chain.request())
 
@@ -51,7 +51,7 @@ open class NetworkModule {
     //Create a logging interceptor
     @QuidditchPlayersApplicationScope
     @Provides
-    open fun loggingInterceptor(): HttpLoggingInterceptor {
+    fun loggingInterceptor(): HttpLoggingInterceptor {
         //todo if debug set logging
         val loggingInterceptor = HttpLoggingInterceptor()
         loggingInterceptor.level = HttpLoggingInterceptor.Level.HEADERS
@@ -61,7 +61,7 @@ open class NetworkModule {
 
     @QuidditchPlayersApplicationScope
     @Provides
-    open fun authApiKeyInterceptor(): HeaderInterceptor {
+    fun authApiKeyInterceptor(): HeaderInterceptor {
         return HeaderInterceptor()
     }
 
@@ -70,10 +70,10 @@ open class NetworkModule {
     // with cache, network cache interceptor and logging interceptor
     @QuidditchPlayersApplicationScope
     @Provides
-    open fun okHttpClient(cache: Cache,
-                          networkCacheInterceptor: Interceptor,
-                          loggingInterceptor: HttpLoggingInterceptor,
-                          authApiKeyInterceptor: HeaderInterceptor): OkHttpClient {
+    fun okHttpClient(cache: Cache,
+                     networkCacheInterceptor: Interceptor,
+                     loggingInterceptor: HttpLoggingInterceptor,
+                     authApiKeyInterceptor: HeaderInterceptor): OkHttpClient {
         return OkHttpClient.Builder()
                 .cache(cache)
                 .addInterceptor(authApiKeyInterceptor)
@@ -85,7 +85,7 @@ open class NetworkModule {
     //Create the Retrofit with the httpClient
     @QuidditchPlayersApplicationScope
     @Provides
-    open fun retrofit(okHttpClient: OkHttpClient): Retrofit {
+    fun retrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
                 .baseUrl("https://cjmobileapps.com/")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -96,22 +96,19 @@ open class NetworkModule {
 
     @QuidditchPlayersApplicationScope
     @Provides
-    open fun quidditchPlayersApi(retrofit: Retrofit): QuidditchPlayersApi {
+    fun quidditchPlayersApi(retrofit: Retrofit): QuidditchPlayersApi {
         return retrofit.create(QuidditchPlayersApi::class.java)
     }
 
     @QuidditchPlayersApplicationScope
     @Provides
-    open fun quidditchPlayersService(quidditchPlayersApi: QuidditchPlayersApi, webSocketRepository: WebSocketRepositoryImpl): QuidditchPlayersServiceImpl {
+    fun quidditchPlayersService(quidditchPlayersApi: QuidditchPlayersApi, webSocketRepository: WebSocketRepositoryImpl): QuidditchPlayersServiceImpl {
         return QuidditchPlayersService(quidditchPlayersApi, webSocketRepository)
     }
 
     @QuidditchPlayersApplicationScope
     @Provides
-    open fun webSocketRepository(okHttpClient: OkHttpClient): WebSocketRepositoryImpl {
+    fun webSocketRepository(okHttpClient: OkHttpClient): WebSocketRepositoryImpl {
         return WebSocketRepository(okHttpClient, "wss://cjmobileapps.com/api/v1/quidditch/status")
     }
 }
-
-//todo delete open here and fake module and see what happens
-

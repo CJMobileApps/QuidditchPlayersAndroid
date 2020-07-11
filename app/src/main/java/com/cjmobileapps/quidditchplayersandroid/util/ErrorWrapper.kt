@@ -1,6 +1,9 @@
 package com.cjmobileapps.quidditchplayersandroid.util
 
 import retrofit2.HttpException
+import timber.log.Timber
+import java.io.PrintWriter
+import java.io.StringWriter
 
 data class ErrorWrapper(var throwable: Throwable) {
 
@@ -24,10 +27,17 @@ data class ErrorWrapper(var throwable: Throwable) {
                 return message
             }
 
+            val stringWriter = StringWriter()
+            val printWriter = PrintWriter(stringWriter)
+            throwable.printStackTrace(printWriter)
+
+
+            Timber.tag("ErrorWrapper() ").e(stringWriter.toString())
+
             return throwable.message ?: ""
         }
 }
 
-fun Throwable.toErrorWrapper() : ErrorWrapper {
+fun Throwable.toErrorWrapper(): ErrorWrapper {
     return ErrorWrapper(this)
 }

@@ -4,9 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.cjmobileapps.quidditchplayersandroid.network.models.Player
-import com.cjmobileapps.quidditchplayersandroid.network.models.Position
 import com.cjmobileapps.quidditchplayersandroid.network.models.Status
-import com.cjmobileapps.quidditchplayersandroid.network.models.service.QuidditchPlayersServiceImpl
+import com.cjmobileapps.quidditchplayersandroid.network.service.QuidditchPlayersServiceImpl
 import com.cjmobileapps.quidditchplayersandroid.util.toErrorWrapper
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -15,6 +14,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.functions.BiFunction
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
+import java.lang.Exception
 
 class MainViewModel(private val quidditchPlayersService: QuidditchPlayersServiceImpl) : ViewModel() {
     private var compositeDisposable: CompositeDisposable = CompositeDisposable()
@@ -22,10 +22,10 @@ class MainViewModel(private val quidditchPlayersService: QuidditchPlayersService
     private val statusMutableLiveData = MutableLiveData<Status>()
     val players: LiveData<List<Player>> = playersMutableLiveData
     val status: LiveData<Status> = statusMutableLiveData
-    val tag = MainViewModel::class.java.simpleName
+    private val tag = MainViewModel::class.java.simpleName
 
     //Key = Id & Value = index
-    val playersIndexMap = hashMapOf<Int, Int>()
+    val playersIndexMap = hashMapOf<String, Int>()
 
     override fun onCleared() {
         compositeDisposable.add(endStatuses())
@@ -38,26 +38,31 @@ class MainViewModel(private val quidditchPlayersService: QuidditchPlayersService
     }
 
     private fun getPlayersObservable(): Observable<List<Player>> {
-        return quidditchPlayersService.getPlayers().toObservable().subscribeOn(Schedulers.io())
+        return quidditchPlayersService.getPlayers()
+                .map { response ->
+                    response.data ?: throw Exception("Blah should be a custom exception")
+                }
+                .toObservable()
+                .subscribeOn(Schedulers.io())
     }
 
-    private fun getPositionsObservable(): Observable<List<Position>> {
-        return quidditchPlayersService.getPositions().toObservable().subscribeOn(Schedulers.io())
+    private fun getPositionsObservable(): Observable<Map<String, String>> {
+        return quidditchPlayersService.getPositions()
+                .toObservable()
+                .map { response ->
+                    response.data ?: throw Exception("Blah should be a custom exception")
+                }
+                .subscribeOn(Schedulers.io())
     }
 
     private fun getPlayersAndPositions(
             playersObservable: Observable<List<Player>>,
-            positionsObservable: Observable<List<Position>>
+            positionsObservable: Observable<Map<String, String>>
     ): Disposable {
-        return Observable.zip(playersObservable, positionsObservable, BiFunction<List<Player>, List<Position>, List<Player>> { players, positions ->
-
-            val positionsMap = hashMapOf<Int, String>()
-            for (position in positions) {
-                positionsMap[position.id] = position.positionName
-            }
+        return Observable.zip(playersObservable, positionsObservable, BiFunction<List<Player>, Map<String, String>, List<Player>> { players, positions ->
 
             for ((index, player) in players.withIndex()) {
-                player.positionName = positionsMap[player.position] ?: ""
+                player.positionName = positions[player.position.toString()] ?: ""
                 player.status = "No Status"
                 playersIndexMap[player.id] = index
             }
@@ -86,7 +91,7 @@ class MainViewModel(private val quidditchPlayersService: QuidditchPlayersService
         return quidditchPlayersService.endStatusUpdates()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ hasEndedStatuses ->
+                .subscribe({
                 }, { error ->
                     Timber.tag(tag).e("EndStatuses call error message: %s", error.toErrorWrapper().message)
                 })

@@ -1,4 +1,4 @@
-package com.cjmobileapps.quidditchplayersandroid.network.models.service
+package com.cjmobileapps.quidditchplayersandroid.network.service
 
 import com.cjmobileapps.quidditchplayersandroid.network.QuidditchPlayersApi
 import com.cjmobileapps.quidditchplayersandroid.network.WebSocketRepositoryImpl

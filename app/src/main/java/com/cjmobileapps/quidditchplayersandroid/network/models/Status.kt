@@ -1,6 +1,6 @@
 package com.cjmobileapps.quidditchplayersandroid.network.models
 
 data class Status(
-        val id: Int,
+        val id: String,
         val status: String
 )
